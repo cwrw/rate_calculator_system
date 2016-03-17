@@ -1,0 +1,25 @@
+Style/Encoding:
+  Enabled: false
+
+AllCops:
+  Exclude:
+  - Gemfile
+  - spec/spec_helper.rb
+  TargetRubyVersion: 2.2
+Documentation:
+  Enabled: false
+
+StringLiterals:
+  Enabled: false
+
+Metrics/LineLength:
+  Max: 140
+
+Style/AlignParameters:
+  EnforcedStyle: with_fixed_indentation
+
+Style/AndOr:
+  Enabled: false
+
+Style/RescueModifier:
+  Enabled: false
