@@ -1,0 +1,5 @@
+require "csv"
+require "rate_calculator_system/lender"
+require "rate_calculator_system/input_parser"
+require "rate_calculator_system/calculator"
+require "pry-byebug"

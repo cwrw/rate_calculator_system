@@ -1,4 +1,5 @@
 require "capybara/rspec"
+require "rate_calculator_system"
 
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate
