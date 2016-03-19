@@ -13,7 +13,7 @@ class RateCalculatorSystem
 
     def parse
       header = contents.shift
-      header_valid?(header)
+      raise RateCalculatorSystem::InvalidHeaderError unless header_valid?(header)
       extract_content
     end
 
@@ -24,10 +24,7 @@ class RateCalculatorSystem
     end
 
     def header_valid?(header)
-      raise "Invalid Header in CSV file, your" \
-            "data should be structured as " \
-            "follows: #{LENDER}, #{RATE}, #{AMOUNT}" unless
-        header.compact == [LENDER, RATE, AMOUNT]
+      header.compact == [LENDER, RATE, AMOUNT]
     end
 
     def extract_content
