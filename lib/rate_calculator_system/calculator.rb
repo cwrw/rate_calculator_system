@@ -46,6 +46,11 @@ module RateCalculatorSystem
       )
     end
 
+    # Formula to calculate rate:
+    # ( FV / PV )^1/n - 1
+    # FV = final value
+    # PV = present value
+    # n = period in years
     def rate
       (((total_payment / requested_loan)**(1 / LOAN_PERIOD.to_f) - 1) * 100).round(1)
     end
@@ -57,6 +62,10 @@ module RateCalculatorSystem
       )
     end
 
+    # Calculates final value available by
+    # calculating the sum of each lender's amount
+    # monthly compounding interest whilst
+    # still in the requested loan range
     def evaluate_total(loan_value)
       lenders.inject(0) do |total, lender|
         return total if loan_value <= 0
@@ -66,6 +75,11 @@ module RateCalculatorSystem
       end
     end
 
+    # Formula to calculate total compounding interest:
+    # PV * (1+r)^n
+    # PV = present value
+    # r = rate
+    # n = period in years
     def monthly_compounding_interest(amount, interest_rate)
       amount * (1 + interest_rate)**LOAN_PERIOD
     end
