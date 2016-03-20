@@ -1,0 +1,4 @@
+#!/usr/bin/env ruby
+
+require './lib/rate_calculator_system'
+RateCalculatorSystem.calculate(ARGV[0], ARGV[1])
