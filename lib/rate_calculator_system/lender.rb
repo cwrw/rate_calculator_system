@@ -1,4 +1,4 @@
-class RateCalculatorSystem
+module RateCalculatorSystem
   class Lender
     attr_reader :name, :rate, :amount
     def initialize(name:, rate:, amount:)

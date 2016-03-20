@@ -1,4 +1,4 @@
-class RateCalculatorSystem
+module RateCalculatorSystem
   class InputParser
     LENDER = "Lender".freeze
     RATE = "Rate".freeze

@@ -19,8 +19,8 @@ module RateCalculatorSystem
 
     def loan_valid?
       requested_loan >= MINIMUM_AMOUNT &&
-      requested_loan <= MAXIMUM_AMOUNT &&
-      requested_loan % 100 == 0
+        requested_loan <= MAXIMUM_AMOUNT &&
+        requested_loan % 100 == 0
     end
 
     def funds_available?
