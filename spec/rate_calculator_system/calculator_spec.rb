@@ -66,12 +66,14 @@ RSpec.describe RateCalculatorSystem::Calculator do
     end
   end
 
-  describe "evaluate_final_rate" do
+  describe "final_rate" do
     let(:message) do
-      "Requested amount: £#{loan}\n" \
-      "Rate: #{rate}%\n" \
-      "Monthly repayment: £#{monthly_payment}\n" \
-      "Total repayment: £#{total_payment}\n"
+      %(
+        Requested amount: £#{loan}
+        Rate: #{rate}%
+        Monthly repayment: £#{monthly_payment}
+        Total repayment: £#{total_payment}
+      )
     end
 
     context "loan amount less than one lender amount" do
@@ -88,7 +90,7 @@ RSpec.describe RateCalculatorSystem::Calculator do
       let(:total_payment) { 1242.30 }
 
       it "outputs correct rate and totals in message" do
-        expect(subject.evaluate_final_rate).to eq(message)
+        expect(subject.final_rate).to eq(message)
       end
     end
 
@@ -99,24 +101,40 @@ RSpec.describe RateCalculatorSystem::Calculator do
       let(:total_payment) { 2860.01 }
 
       it "outputs correct rate and totals in message" do
-        expect(subject.evaluate_final_rate).to eq(message)
+        expect(subject.final_rate).to eq(message)
       end
     end
 
     context "loan amount equal to one lender amount" do
       let(:lenders) do
         [
-          RateCalculatorSystem::Lender.new(name: "Bob", rate: 0.075, amount: 640),
+          RateCalculatorSystem::Lender.new(name: "Bob", rate: 0.075, amount: 6400),
           RateCalculatorSystem::Lender.new(name: "John", rate: 0.081, amount: 320)
         ]
       end
 
-      let(:loan) { 640 }
+      let(:loan) { 6400 }
       let(:rate) { 7.5 }
-      let(:monthly_payment) { 66.26 }
-      let(:total_payment) { 795.07 }
+      let(:monthly_payment) { 662.56 }
+      let(:total_payment) { 7950.70 }
       it "outputs correct rate and totals in message" do
-        expect(subject.evaluate_final_rate).to eq(message)
+        expect(subject.final_rate).to eq(message)
+      end
+    end
+
+    context "exceptions" do
+      context "loan not valid" do
+        let(:loan) { 800 }
+        it "raises invalid loan error" do
+          expect { subject.final_rate }.to raise_error(RateCalculatorSystem::InvalidLoanError)
+        end
+      end
+
+      context "funds not available" do
+        let(:loan) { 2400 }
+        it "raises no funds error" do
+          expect { subject.final_rate }.to raise_error(RateCalculatorSystem::NoFundsError)
+        end
       end
     end
   end

@@ -1,4 +1,4 @@
-class RateCalculatorSystem
+module RateCalculatorSystem
   class Calculator
     attr_reader :lenders, :requested_loan
 
@@ -7,36 +7,43 @@ class RateCalculatorSystem
     LOAN_PERIOD = 3
 
     def initialize(requested_loan, lenders)
-      @requested_loan = requested_loan
-      @lenders = sort_for!(lenders)
+      @requested_loan = Float(requested_loan)
+      @lenders = sort_by_rate!(lenders)
+    end
+
+    def final_rate
+      raise RateCalculatorSystem::InvalidLoanError unless loan_valid?
+      raise RateCalculatorSystem::NoFundsError unless funds_available?
+      rate_output
     end
 
     def loan_valid?
-      Float(requested_loan) &&
-        requested_loan >= MINIMUM_AMOUNT &&
-        requested_loan <= MAXIMUM_AMOUNT &&
-        requested_loan % 100 == 0
+      requested_loan >= MINIMUM_AMOUNT &&
+      requested_loan <= MAXIMUM_AMOUNT &&
+      requested_loan % 100 == 0
     end
 
     def funds_available?
       requested_loan <= total_funds
     end
 
-    def evaluate_final_rate
-      "Requested amount: £#{requested_loan}\n" \
-      "Rate: #{rate}%\n" \
-      "Monthly repayment: £#{monthly_payment}\n" \
-      "Total repayment: £#{total_payment}\n"
-    end
-
     private
 
-    def sort_for!(array)
+    def sort_by_rate!(array)
       array.sort! { |a, b| a.rate <=> b.rate }
     end
 
     def total_funds
       lenders.inject(0) { |a, e| a + e.amount }
+    end
+
+    def rate_output
+      %(
+        Requested amount: £#{requested_loan.to_i}
+        Rate: #{rate}%
+        Monthly repayment: £#{monthly_payment}
+        Total repayment: £#{total_payment}
+      )
     end
 
     def rate
