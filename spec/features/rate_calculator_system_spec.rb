@@ -20,11 +20,12 @@ RSpec.feature 'Rate calculator system', type: feature do
     let(:message) do
       %r{
         Requested amount: £1100
-        Rate: 7.0%
-        Monthly repayment: £112.37
-        Total repayment: £1348.45
+        Rate: 7.3%
+        Monthly repayment: £113.33
+        Total repayment: £1360.01
       }
     end
+
     context "loan within range" do
       let(:loan) { "1100" }
       scenario "outputs lowest rate details" do
@@ -52,6 +53,9 @@ RSpec.feature 'Rate calculator system', type: feature do
       scenario "outputs relevant no funds message" do
         expect { subject }.to output(message).to_stdout
       end
+    end
+
+    context "market data with maximum exposure" do
     end
   end
 
