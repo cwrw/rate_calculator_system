@@ -3,13 +3,13 @@ require "spec_helper"
 RSpec.describe RateCalculatorSystem::Calculator do
   let(:lenders) do
     [
-      RateCalculatorSystem::Lender.new(name: "John", rate: 0.081, amount: 320),
-      RateCalculatorSystem::Lender.new(name: "Mary", rate: 0.104, amount: 170),
-      RateCalculatorSystem::Lender.new(name: "Angela", rate: 0.071, amount: 60),
-      RateCalculatorSystem::Lender.new(name: "Fred", rate: 0.071, amount: 520),
-      RateCalculatorSystem::Lender.new(name: "Dave", rate: 0.074, amount: 140),
-      RateCalculatorSystem::Lender.new(name: "Jane", rate: 0.069, amount: 480),
-      RateCalculatorSystem::Lender.new(name: "Bob", rate: 0.075, amount: 640)
+      RateCalculatorSystem::Lender.new(name: "Bob", rate: 0.075, amount: 640, maximum_exposure: 300),
+      RateCalculatorSystem::Lender.new(name: "Jane", rate: 0.069, amount: 480, maximum_exposure: 400),
+      RateCalculatorSystem::Lender.new(name: "Fred", rate: 0.071, amount: 520, maximum_exposure: 100),
+      RateCalculatorSystem::Lender.new(name: "Mary", rate: 0.104, amount: 170, maximum_exposure: 130),
+      RateCalculatorSystem::Lender.new(name: "John", rate: 0.081, amount: 320, maximum_exposure: 200),
+      RateCalculatorSystem::Lender.new(name: "Dave", rate: 0.074, amount: 140, maximum_exposure: 100),
+      RateCalculatorSystem::Lender.new(name: "Angela", rate: 0.071, amount: 60, maximum_exposure: 20)
     ]
   end
 
@@ -59,7 +59,7 @@ RSpec.describe RateCalculatorSystem::Calculator do
     end
 
     context "loan is less than available funds" do
-      let(:loan) { 2000 }
+      let(:loan) { 1100 }
       it "returns true" do
         expect(subject.funds_available?).to be_truthy
       end
@@ -76,11 +76,29 @@ RSpec.describe RateCalculatorSystem::Calculator do
       )
     end
 
-    context "loan amount less than one lender amount" do
+    context "loan amount less than one lender amount and maximum exposure is less than loan" do
       let(:lenders) do
         [
-          RateCalculatorSystem::Lender.new(name: "Bob", rate: 0.075, amount: 1640),
-          RateCalculatorSystem::Lender.new(name: "John", rate: 0.081, amount: 320)
+          RateCalculatorSystem::Lender.new(name: "Bob", rate: 0.075, amount: 1640, maximum_exposure: 900),
+          RateCalculatorSystem::Lender.new(name: "John", rate: 0.081, amount: 320, maximum_exposure: 200)
+        ]
+      end
+
+      let(:loan) { 1000 }
+      let(:rate) { 7.6 }
+      let(:monthly_payment) { 103.70 }
+      let(:total_payment) { 1244.39 }
+
+      it "outputs correct rate and totals in message" do
+        expect(subject.final_rate).to eq(message)
+      end
+    end
+
+    context "loan amount less than one lender amount and maximum exposure equal to amount" do
+      let(:lenders) do
+        [
+          RateCalculatorSystem::Lender.new(name: "Bob", rate: 0.075, amount: 1640, maximum_exposure: 1640),
+          RateCalculatorSystem::Lender.new(name: "John", rate: 0.081, amount: 320, maximum_exposure: 200)
         ]
       end
 
@@ -95,10 +113,10 @@ RSpec.describe RateCalculatorSystem::Calculator do
     end
 
     context "loan amount more than one lender amount" do
-      let(:loan) { 2300 }
-      let(:rate) { 7.5 }
-      let(:monthly_payment) { 238.33 }
-      let(:total_payment) { 2860.01 }
+      let(:loan) { 1100 }
+      let(:rate) { 7.3 }
+      let(:monthly_payment) { 113.33 }
+      let(:total_payment) { 1360.01 }
 
       it "outputs correct rate and totals in message" do
         expect(subject.final_rate).to eq(message)
@@ -108,8 +126,8 @@ RSpec.describe RateCalculatorSystem::Calculator do
     context "loan amount equal to one lender amount" do
       let(:lenders) do
         [
-          RateCalculatorSystem::Lender.new(name: "Bob", rate: 0.075, amount: 6400),
-          RateCalculatorSystem::Lender.new(name: "John", rate: 0.081, amount: 320)
+          RateCalculatorSystem::Lender.new(name: "Bob", rate: 0.075, amount: 6400, maximum_exposure: 6400),
+          RateCalculatorSystem::Lender.new(name: "John", rate: 0.081, amount: 320, maximum_exposure: 320)
         ]
       end
 

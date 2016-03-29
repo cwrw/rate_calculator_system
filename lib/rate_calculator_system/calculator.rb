@@ -34,7 +34,7 @@ module RateCalculatorSystem
     end
 
     def total_funds
-      lenders.inject(0) { |a, e| a + e.amount }
+      lenders.inject(0) { |a, e| a + e.maximum_exposure }
     end
 
     def rate_output
@@ -69,8 +69,8 @@ module RateCalculatorSystem
     def evaluate_total(loan_value)
       lenders.inject(0) do |total, lender|
         return total if loan_value <= 0
-        total += monthly_compounding_interest(amount(loan_value, lender.amount), lender.rate)
-        loan_value -= lender.amount
+        total += monthly_compounding_interest(amount(loan_value, lender.maximum_exposure), lender.rate)
+        loan_value -= lender.maximum_exposure
         total
       end
     end

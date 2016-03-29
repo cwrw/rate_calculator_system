@@ -1,7 +1,7 @@
-Lender,Rate,Available
-Bob,Bob,640
-Jane,Jane,480
-Fred,Foo,520
+Lender,Rate,Available,Maximum Exposure
+Bob,Bob,640,100
+Jane,Jane,480,200
+Fred,Foo,520,300
 Mary,Bar,170
 0.081,John,320
 0.074,Dave,140
