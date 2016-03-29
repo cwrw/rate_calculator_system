@@ -3,6 +3,7 @@ module RateCalculatorSystem
     LENDER = "Lender".freeze
     RATE = "Rate".freeze
     AMOUNT = "Available".freeze
+    MAXIMUM_EXPOSURE = "Maximum Exposure".freeze
 
     attr_reader :input, :lenders
 
@@ -24,7 +25,7 @@ module RateCalculatorSystem
     end
 
     def header_valid?(header)
-      header.compact == [LENDER, RATE, AMOUNT]
+      header.compact == [LENDER, RATE, AMOUNT, MAXIMUM_EXPOSURE]
     end
 
     def extract_content
@@ -39,7 +40,8 @@ module RateCalculatorSystem
       RateCalculatorSystem::Lender.new(
         name: row[0],
         rate: Float(row[1]),
-        amount: Float(row[2])
+        amount: Float(row[2]),
+        maximum_exposure: Float(row[3])
       )
     end
   end
